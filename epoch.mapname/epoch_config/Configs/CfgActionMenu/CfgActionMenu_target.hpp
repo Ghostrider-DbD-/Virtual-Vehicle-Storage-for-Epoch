@@ -5,10 +5,11 @@
 class VGFE_GarageAtJammer 
 {
 	condition = "dyna_AtHome && dyna_cursorTargetType in (call EPOCH_JammerClasses) && (damage dyna_cursorTarget < 1) && (getNumber(missionConfigFile >> 'CfgVGFE' >> 'useDynamenu') == 0)";
-	action = "['jammer'] call VGFE_fnc_client_accessVehicleGarage";
+	action = "['garage'] call VGFE_fnc_client_accessVehicleGarage";
 	//icon = "\A3\EditorPreviews_F_Exp\Data\CfgVehicles\Land_Addon_05_F.jpg";
 	icon = "\A3\Soft_F_Exp\Offroad_01\Data\UI\map_Offroad_01_gen_CA.paa";
 	toolTip = "Access the Virtual Garage";
+	colorBackground[] = {0.35,0.35,0.1,0.8};
 };
 class VGFE_Hanger
 {
@@ -16,6 +17,7 @@ class VGFE_Hanger
 	action = "['hanger'] call VGFE_fnc_client_accessVehicleGarage";
 	icon = "\A3\Air_F_EPC\Plane_CAS_01\Data\UI\Map_Plane_CAS_01_CA.paa";
 	tooltip = "Access the Virtual Hanger";
+	colorBackground[] = {0.35,0.35,0.1,0.8};
 };
 class VGFE_Dock  
 {
@@ -23,4 +25,5 @@ class VGFE_Dock
 	action = "['dock'] call VGFE_fnc_client_accessVehicleGarage";
 	icon = "\A3\boat_f\Boat_Armed_01\data\ui\map_boat_armed_01_minigun.paa";
 	tooltip = "Access the Virtual Dock";
+	colorBackground[] = {0.35,0.35,0.1,0.8};
 };

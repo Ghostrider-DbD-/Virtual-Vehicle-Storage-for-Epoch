@@ -16,7 +16,7 @@ if(_show3DMarker == 1) then
 	private _maxHeight = abs ((_p2 select 2) - (_p1 select 2));	
 	VGFE_pos = getPosATL _vehicle;
 	VGFE_pos set[2, (VGFE_pos select 2) + _maxHeight];
-	//diag_log format["_fnc_cleint_vehicleRetrieved: VGFE_pos = %1",VGFE_pos];
+	diag_log format["_fnc_cleint_vehicleRetrieved: VGFE_3DmarkerDisplayTime = %1",VGFE_3DmarkerDisplayTime];
 	VGVE_3DiconHandle = addMissionEventHandler ["Draw3D", {
 		if (diag_tickTime - VGFE_3DmarkerStartTime > VGFE_3DmarkerDisplayTime) then {
 			removeMissionEventHandler ["Draw3D", VGVE_3DiconHandle];

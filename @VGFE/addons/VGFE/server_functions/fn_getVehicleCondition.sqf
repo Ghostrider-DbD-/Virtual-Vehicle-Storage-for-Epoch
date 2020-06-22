@@ -14,5 +14,7 @@ if!(_hitpoints isEqualTo [])then
 };
 private _damage = damage _vehicle;
 private _condition = [_fuel,_damage,_vehicleHitpoints];
-
+diag_log format["_fnc_getVehicleCondition: condition = %1",_condition];
 _condition
+
+

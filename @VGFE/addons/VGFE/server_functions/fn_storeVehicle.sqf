@@ -5,8 +5,6 @@
 
 params["_vgfe","_vgfeKey","_accessPoint","_vehicle","_player"];
 
-
-
 private _vehSlot = _vehicle getVariable ["VEHICLE_SLOT", "ABORT"];
 if !(_vehSlot isEqualTo "ABORT") then 
 {  //  So we do not store temporary vehicles
@@ -20,10 +18,8 @@ if !(_vehSlot isEqualTo "ABORT") then
 	private _textures = getObjectTextures _vehicle;
 	private _loadout = [_vehicle] call VGFE_fnc_getVehicleLoadout;
 	private _nickname = getPlateNumber _vehicle;
-
 	private _vehicleLockState = locked _vehicle;
 	private _vehicleData = [_className,_location,_condition,_inventory,_textures,_loadout,_nickname,_vehicleLockState];
-
 
 	/* we can only process one client request at a time so add a check for a pendiing request to access VG */
 	waitUntil{MyVGFEstate == 1};

@@ -7,7 +7,6 @@ params["_vgfe","_key","_player"];
 diag_log format["_fnc_retriveVehicle: _player = %1 | _key = %2 | _vgfe = %3",_player,_key,_vgfe];
 /* we can only process one client request at a time so add a check for a pendiing request to access VG */
 
-
 private _vgfeSlot = [];
 private _index = -1;
 if !(EPOCH_VehicleSlots isEqualTo []) then 

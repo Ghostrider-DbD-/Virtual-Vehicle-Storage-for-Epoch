@@ -11,4 +11,5 @@ if (_saveIventory) then {
 } else {
 	_inventory = [];
 };
+diag_log format["_fnc_getVehicleInventory: _inventory = %1",_inventory];
 _inventory

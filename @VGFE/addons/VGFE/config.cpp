@@ -24,10 +24,10 @@ class CfgPatches {
 };
 
 class CfgBuild {
-    class VVS {
-        build = 1;
-        version = 0.51;
-        date = "7-5-20";
+    class VGFE {
+        build = 2;
+        version = 0.52;
+        date = "7-13-20";
     };
 };
 

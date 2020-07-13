@@ -10,5 +10,5 @@ if (_state isEqualTo "") then
 {
 	diag_log format["[VGFE] %1",_message];
 } else {
-	diag_log format["[VGFE] <%1>  %2",_stateMessage,_message];
+	diag_log format["[VGFE] <%1>  %2",_state,_message];
 };

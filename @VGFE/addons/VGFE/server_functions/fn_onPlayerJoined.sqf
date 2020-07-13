@@ -5,7 +5,7 @@
 
 params["_id","_uid","_name","_jip","_owner"];
 private _querry = (["VGFE_DATA", _uid] call EPOCH_fnc_server_hiveGETRANGE);
-
+private "_expiresAt";
 private ["_status","_vgfe"];
 if ((_querry select 0) == 1 && (_querry select 1) isEqualType []) then 
 {
@@ -14,15 +14,15 @@ if ((_querry select 0) == 1 && (_querry select 1) isEqualType []) then
 	{
 		/* The player has logged on so lets be sure we update the expiresAt time */
 		private _expiresAt = getText(missionConfigFile >> "CfgVGFE" >> "vgfeExpiresAt");
-		["VGFE_DATA",_uid,_expiresAt] call EPOCH_fnc_server_hiveEXPIRE;
-		[format["_onPlayerJoined: _name = %1 | _expiresAt = %2",_name,_expiresAt]] call VGFE_fnc_log;		
+		["VGFE_DATA",_uid,_expiresAt] call EPOCH_fnc_server_hiveEXPIRE;	
 	};
+	[format["_onPlayerJoined: _name = %1 | _expiresAt = %2",_name,_expiresAt]] call VGFE_fnc_log;		
 } else {
 	/*  some sort of error occured */
 	MyVGFE = [];
-		private _expiresAt = getText(missionConfigFile >> "CfgVGFE" >> "vgfeExpiresAt");
-		["VGFE_DATA",_uid,_expiresAt] call EPOCH_fnc_server_hiveEXPIRE;
-		[format["_onPlayerJoined: _name = %1 | _expiresAt = %2",_name,_expiresAt]] call VGFE_fnc_log;		
+	private _expiresAt = getText(missionConfigFile >> "CfgVGFE" >> "vgfeExpiresAt");
+	["VGFE_DATA",_uid,_expiresAt] call EPOCH_fnc_server_hiveEXPIRE;
+	[format["_onPlayerJoined: _name = %1 | _expiresAt = %2",_name,_expiresAt]] call VGFE_fnc_log;		
 };
 
 private _querry2 = (["VGFE_KEY",_uid] call EPOCH_fnc_server_hiveGETRANGE);

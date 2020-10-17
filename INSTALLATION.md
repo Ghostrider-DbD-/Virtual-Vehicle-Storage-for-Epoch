@@ -19,7 +19,7 @@ CLIENT [Mission.pbo]:
 
 BATTLEYE:
 
-8. Merge remoteexec.txt to add the exception
+8. Merge remoteexec.txt in the download with the file of the same name in your \SC\battleye folder to add the exception.
 
 INFISTAR
 

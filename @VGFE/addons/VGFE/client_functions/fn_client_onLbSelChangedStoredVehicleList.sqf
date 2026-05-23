@@ -12,11 +12,20 @@ private _ctrlVehicleNickname = (_display displayCtrl 1009);
 _ctrlVehDescription ctrlSetStructuredText parseText _vehicleType;
 private _vgSlot = MyVGFE select _index;
 _vgSlot params["_key","_accessPoint","_vehicleData"];
-_vehicleData params ["_className","_location","_condition","_inventory","_textures","_loadout","_nickname","_vehicleLockState"];
+//_vehicleData params ["_className","_location","_condition","_inventory","_textures","_loadout","_nickname","_vehicleLockState"];
+_vehicleData params ["_className","_locationData","_condition","_inventory","_textures","_loadout","_nickname","_vehicleLockState",["_baseclass",""]];
+
+for "_i" from 0 to (count _vehicleData) do {
+	diag_log format["VGFE _onLbSelChangedStoredVehicleList: _data %1 | _index %2", _x, _forEachIndex];
+};
+
 private _picture = getText(configFile >> "CfgVehicles" >> _className >> "editorPreview");
+diag_log format["VGFE_fnc_client_onLbSelChangedStoredVehiclesList:  _className %1 | _picture %2",_classname,_picture];
 private _ctrl = (_display displayCtrl 1200);  // Where we display pictures of things
 _ctrl ctrlSetText _picture;		
-_ctrlVehicleNickname ctrlSetText format["Plate: %1",_nickname];
+
+diag_log format["VGFE _onLbSelChangedStoredVehiclesList: _nickname %1", _nickname];
+_ctrlVehicleNickname ctrlSetText format["Plate: %1",_nickname];  //  Where we display the license plate name 
 if!(VGFE_activeList isEqualTo "retrieve") then
 {
 	VGFE_activeList = "retrieve";

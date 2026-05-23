@@ -3,18 +3,17 @@
 	Copyright 2020 by Ghostrider-GRG-
 */
 
-params["_vgfe","_vgfeKey","_accessPoint","_vehicle","_player"];
-
+params["_accessPoint","_vehicle","_player"];
+//diag_log format["VGFE called with _accessPoint %1 | _vehicle %2 | _plaer %3",_accessPoint, _vehicle, _player];
 private _vehSlot = _vehicle getVariable ["VEHICLE_SLOT", "ABORT"];
+//diag_log format["VGFE: _storeVehicle: _vehSlot = %1", _vehSlot];
 
 if !(_vehSlot isEqualTo "ABORT") then 
 {  //  So we do not store temporary vehicles
-	_vgfeKey = _vgfeKey + 1;
-
 
 	private _vehicleData = [
 		typeOf _vehicle,
-		[getPosATL _vehicle,[vectordir _vehicle,vectorup _vehicle]],
+		[getPosATL _vehicle,getDir _vehicle,vectorup _vehicle],
 		[_vehicle] call VGFE_fnc_getVehicleCondition,
 		[_vehicle] call VGFE_fnc_getVehicleInventory,
 		getObjectTextures _vehicle,
@@ -23,31 +22,18 @@ if !(_vehSlot isEqualTo "ABORT") then
 		locked _vehicle,
 		_vehicle getVariable["VEHICLE_BASECLASS",""]
 	];
-
+	//diag_log format["VGFE _storeVehicle: _vehicleData %1", _vehicleData]; 
+	
 	/* we can only process one client request at a time so add a check for a pendiing request to access VG */
 	waitUntil{MyVGFEstate == 1};
 
 	/* Tell the server a request is pending */
 	MyVGFEstate = 0;
 
-	_vgfe pushBack [_vgfeKey,_accessPoint,_vehicleData];
-	MyVGFE = _vgfe;
-	MyVGFEkey = _vgfeKey;
-	(owner _player) publicVariableClient "MyVGFE";
-	(owner _player) publicVariableClient "MyVGFEkey";
-	private _expiresAt = "999999";	
-	if (isText(missionConfigFile >> "CfgVGFE" >> "vgfeExpiresAt")) then 
-	{
-		_expiresAt = getText(missionConfigFile >> "CfgVGFE" >> "vgfeExpiresAt");
-	};
-	//[format["fn_storeVehicle: _expiresAt = %1",_expiresAt]] call VGFE_fnc_log;
-	["VGFE_DATA", getPlayerUID _player, _expiresAt, MyVGFE] call EPOCH_fnc_server_hiveSETEX;
-	["VGFE_KEY",getPlayerUID _player,_expiresAt,[MyVGFEkey]] call EPOCH_fnc_server_hiveSETEX;
-
-	/* It is now safe to go ahead with other operations using MyVGFE / MyVGFEkey */
-	MyVGFEstate = 1;
-
-	deleteVehicle _vehicle;	
+	private _hiveData = [_player] call VGFE_fnc_getVGdata;
+	_hiveData pushBack [_accessPoint, _vehicleData];
+	//  params["_player","_accessPoint","_data"];
+	 [_player, _hiveData] call VGFE_fnc_storeVGdata; 
 
 	private _storageCost = getNumber(missionConfigFile >> "CfgVGFE" >> "storageCost");
 	if (_storageCost > 0) then 
@@ -67,6 +53,7 @@ if !(_vehSlot isEqualTo "ABORT") then
 	missionNamespace setVariable ['EPOCH_VehicleSlotCount', count EPOCH_VehicleSlots, true];
 	[format["Vehicle Stored"]] remoteExec["systemChat",_player];
 	["Vehicle Stored",5] remoteExec["Epoch_Message",_player];
+	deleteVehicle _vehicle;	
 } else {
 	private _error = format["ERROR: %1 is a temporary vehicle and can not be stored",getText(configFile >> "CfgVehicles" >> typeOf _vehicle >> "displayName")];
 	[_error] remoteExec["systemChat",_player];
@@ -76,5 +63,4 @@ if !(_vehSlot isEqualTo "ABORT") then
 
 /* tell the server the VG is ready to handle other requests */
 MyVGFEstate = 1;
-
 

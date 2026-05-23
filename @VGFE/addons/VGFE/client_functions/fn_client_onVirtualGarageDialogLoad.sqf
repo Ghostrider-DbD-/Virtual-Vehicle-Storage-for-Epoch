@@ -3,7 +3,7 @@
 	Copyright 2020 by Ghostrider-GRG-
 */
 
-
+diag_log format["VGFE_fnc_onVirtualGarageDialogLoad run at %1",diag_tickTime];
 private "_vehTypes";
 switch (MyVFGFstorageMode) do 
 {
@@ -81,14 +81,18 @@ switch (MyVFGFstorageMode) do
 	};
 };
 
+diag_log format["VGFE_fnc_client_onVirtualGarageDialogLoad: MyVGFE = %1",MyVGFE];
 private _ctrl = (_display displayCtrl 1500);
 {
-	_x params ["_key","_storagePoint","_vehicleData"];
+	diag_log format["VGFE_fnc_client_onVirtualGarageDialogLoad: _x = %1",_x];
+	_x params ["_storagePoint","_vehicleData"];
 	private _canAccess = [_storagePoint,MyVGFE_accessPoint,_vehicleData] call VGFE_fnc_client_canRetrieve;
-	private _className = _vehicleData select 0;
+
 	if (_canAccess == 1) then {
+		private _className = _vehicleData select 0;
+		diag_log format["VGFE_fnc_client_onVirtualGarageDialogLoad: _className = %1",_className];	
 		private _index = _ctrl lbAdd getText(configFile >> "CfgVehicles" >> _className >> "displayName");
-		_ctrl lbSetValue [_index,_key];
+		_ctrl lbSetValue [_index, _forEachIndex];
 		_ctrl lbSetTooltip [_index,"Select Vehicle To Retrive"];
 	};
 } forEach MyVGFE;

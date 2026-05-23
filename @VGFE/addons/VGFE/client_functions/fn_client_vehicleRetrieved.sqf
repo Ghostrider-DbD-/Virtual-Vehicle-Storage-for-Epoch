@@ -12,6 +12,7 @@ if(_show3DMarker == 1) then
 	VGFE_show3Dicon = 1;
 	VGFE_3DmarkerDisplayTime = getNumber (missionconfigfile >> "CfgVGFE" >> "3DmarkerDisplayTime");
 	VGFE_3DmarkerStartTime = diag_tickTime;
+	diag_log format["VGFE _vehicleRetrieved: _displayTime %1 | _startTime %2", VGFE_3DmarkerDisplayTime, VGFE_3DmarkerStartTime];
 	_bbr = boundingBoxReal _vehicle;
 	private _p1 = _bbr select 0;
 	private _p2 = _bbr select 1;

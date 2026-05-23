@@ -1,0 +1,2 @@
+5-3-26 Build 6
+Change vehicle spawn code to include optional check to findSafeEmpty area to spanw vehicle in with the hope it would reduce vehicles blowing up on respawn.

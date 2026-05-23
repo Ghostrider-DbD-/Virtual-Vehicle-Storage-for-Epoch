@@ -3,19 +3,19 @@
 	Copyright 2020 by Ghostrider-GRG-
 */
 
-params["_vgfe","_key","_player"];
-
-private _vgfeSlot = [];
-private _index = -1;
+params["_index","_player"];
+//diag_log format["VGFE _retrieveVehicle: _index %1 | _player %2 | typeName _player %3", _index, _player, typeName _player];
 if !(EPOCH_VehicleSlots isEqualTo []) then 
 {
-	/* Get vehicle data from VG */
-	{
-		if (_key == (_x select 0)) exitWith {_vgfeSlot = _x; _index = _forEachIndex};
-	} forEach _vgfe;
-	private _vgfeSlot = _vgfe select _index;
-	_vgfeSlot params["_key","_accessPoint","_vehicleData"];
-	_vehicleData params ["_className","_location","_condition","_inventory","_textures","_loadout","_nickname","_vehicleLockState",["_baseclass",""]];
+	private _vgfe = [_player] call VGFE_fnc_getVGdata;
+	private _vgfeData = _vgfe deleteAt _index;
+	//diag_log format["VGFE _retrieveVehicle: _vgfeData %1", _vgfeData];
+	//diag_log format["VGFE _retrieveVehicle: _vgfe %1", _vgfe];
+	//diag_log format["VGFE _retrieveVehicle: _player %1 | typeName _player %2", _player, typeName _player];
+	[_player, _vgfe] call VGFE_fnc_storeVGdata; 
+	private _vehicleData = _vgfeData select 1;
+	//diag_log format["VGFE _retrieveVehicle: _vehicleData %1", _vehicleData];
+	_vehicleData params ["_className","_locationData","_condition","_inventory","_textures","_loadout","_nickname","_vehicleLockState",["_baseclass",""]];
 
 	/*
 		The code below was adapted from files in epoch_server.
@@ -24,24 +24,32 @@ if !(EPOCH_VehicleSlots isEqualTo []) then
 	*/	
 		/* Spawn and configure the vehicle */
 
-	private _safeSpawn = getNumber(missionConfigFile >> "CfgVGFE" >> "preciseSpawnLocation");
-	
-	// [type, position, markers, placement, special]: 
-	private _vehicle = createVehicle[_classname,(_location select 0),[],20,"NONE"];
 
+
+	// [type, position, markers, placement, special]: 
+	#define zeroPos [0,0,0]
+	private _vehicle = createVehicle[_classname,zeroPos,[],20,"NONE"];
+	//diag_log format["VGFE _retrieveVehicle: _vehicle %1 | _className %2", _vehicle, _className];
 	if !(isNull _vehicle) then 
 	{
 		_vehicle allowDamage false;
 		_vehicle call EPOCH_server_setVToken;
 
-		if (_safeSpawn == 0) then 
-		{
-			[_vehicle,_location] call VGFE_fnc_setVehicleLocation;
+		_locationData params["_posATL","_dir","_vectorUp"];	
+		//diag_log format["VGFE _retrieveVehicle: _posATL %1 | _dir %2 | _vectorUp %3", _posATL, _dir, _vectorUp];
+		private _safeSpawn = getNumber(missionConfigFile >> "CfgVGFE" >> "preciseSpawnLocation");
+		if (_safeSpawn == 1) then {
+			private _size = sizeOf _className;
+			private _safePos = _posATL findEmptyPosition [_size, 2 * _size, "classname"];
+			if !(_safePos isEqualTo []) then {_posATL = _safePos};
 		};
+		_vehicle setDir _dir; 
+		_vehicle setPosATL _posATL;
+		_vehicle setVectorUp _vectorUp;
 
 		// set fuel, damage and hitpoints
 		[_vehicle,_condition] call VGFE_fnc_setVehicleCondition;
-		_vehicle allowDamage false;
+	
 
 		// Setup vehicle inventory
 		[_vehicle,_inventory] call VGFE_fnc_setVehicleInventory;
@@ -147,24 +155,6 @@ if !(EPOCH_VehicleSlots isEqualTo []) then
 			_vehicle enableDynamicSimulation true;
 		};
 
-		waitUntil{MyVGFEstate == 1};
-
-		/* Tell the server a request is pending */
-		MyVGFEstate = 0;
-
-		/* Vehicle successfully spawned, update the VG */
-		_vgfe deleteAt _index;
-		MyVGFE = _vgfe;
-		(owner _player) publicvariableclient "MyVGFE";
-		private _playerUID = getPlayerUID _player;
-
-		/* pull this from configs */ 
-		private _expiresAt = getText(missionConfigFile >> "CfgVGFE" >> "vgfeExpiresAt");
-		["VGFE_DATA",_playerUID,_expiresAt,_vgfe] call EPOCH_fnc_server_hiveSETEX;
-
-		/* Tell the server a request can be processed */
-		MyVGFEstate = 1;
-
 		/* tell the player the vehicle was retrieved successfully */
 		private _displayName = getText(configFile >> "CfgVehicles" >> _className >> "displayName");
 		private _m = format["%1 has been retrieved from storage",_displayName];
@@ -187,5 +177,3 @@ if !(EPOCH_VehicleSlots isEqualTo []) then
 	["Insufficient Room on Server to Retrieve Vehicle: Contact Server Owner",5] remoteExec["Epoch_Message",owner player];
 	["Insufficient Room on Server to Retrieve Vehicle: Contact Server Owner"] remoteExec["diag_log",owner _player];
 };
-
-

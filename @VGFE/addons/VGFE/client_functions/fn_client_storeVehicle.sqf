@@ -20,7 +20,7 @@ try {
 	private _slot = _veh getVariable["VEHICLE_SLOT","ABORT"];
 	if (_slot isEqualTo "ABORT") throw 2;
 
-	["store",[MyVGFE,MyVGFEkey,MyVGFE_accessPoint,_veh,player]] remoteExec["VGFE_fnc_handleClientRequest",2];
+	["store",[MyVGFE_accessPoint,_veh,player]] remoteExec["VGFE_fnc_handleClientRequest",2];
 	closeDialog 0;
 }
 

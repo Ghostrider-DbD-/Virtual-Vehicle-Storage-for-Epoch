@@ -1,5 +1,4 @@
 
-Updated to Version 0.4 on July 1, 2020
 
 To update:
 1. Pack @vgfe\addons\vgfe 
@@ -17,3 +16,6 @@ Fixed one exploit:
 Fixed one small error:
    Lock ownership was improerly set when the player was part of a group.
 
+Updated to version 0.6 5/24/26
+- vehicles are now saved to Redis using playerUID as the key
+- Added a check for nearby empoty positions (optional see configs in the mission file)
